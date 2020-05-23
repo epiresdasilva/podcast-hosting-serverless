@@ -20,10 +20,12 @@ def main(event, context):
 
     items = podcasts['Items']
     for item in items:
+        base_url = "http://d30gvsirhz3ono.cloudfront.net/"
+        file_path = base_url + item['info']['arquivo']['nome']
         p.episodes += [
             Episode(
                 title=item['info']['episodio'],
-                media=Media("http://example.org/files/aardvark.mp3", 11932295),  # TODO
+                media=Media(file_path, int(item['info']['arquivo']['tamanho'])),
                 summary=item['info']['descricao'],
             )
         ]

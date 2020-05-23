@@ -1,2 +1,4 @@
 mp3_tagger
 boto3
+podgen
+lxml

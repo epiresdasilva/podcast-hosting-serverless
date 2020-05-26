@@ -1,5 +1,5 @@
 import boto3
-from podgen import Podcast, Episode, Media
+from podgen import Podcast, Episode, Media, Person, Category
 
 s3_client = boto3.client('s3')
 
@@ -11,11 +11,20 @@ def main(event, context):
 
     podcasts = table.scan()
 
+    author = Person("Evandro Pires da Silva", "evandro@evandropires.com.br")
     p = Podcast(
         name="Sem Servidor",
-        description="A cada duas semanas um novo podcast sobre serverless em português.",
+        description="Podcast dedicado a arquitetura serverless, com conteúdo de qualidade em português.",
         website="https://semservidor.com.br",
-        explicit=False
+        explicit=False,
+        copyright="2020 Evandro Pires da Silva",
+        language="pr-BR",
+        authors=[author],
+        feed_url="https://3tz8r90j0d.execute-api.sa-east-1.amazonaws.com/dev/podcasts/rss",
+        category=Category("Music", "Music History"),
+        owner=author,
+        image="http://d30gvsirhz3ono.cloudfront.net/logo_semservidor_teste.jpg",
+        web_master=Person(None, "evandro@evandropires.com.br")
     )
 
     items = podcasts['Items']
@@ -27,9 +36,11 @@ def main(event, context):
                 title=item['info']['episodio'],
                 media=Media(file_path, int(item['info']['arquivo']['tamanho'])),
                 summary=item['info']['descricao'],
+                position=int(item['id'])
             )
         ]
 
+    p.apply_episode_order()
     rss = p.rss_str()
 
     response = {

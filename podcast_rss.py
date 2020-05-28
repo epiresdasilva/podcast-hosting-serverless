@@ -1,5 +1,5 @@
 import boto3
-from podgen import Podcast, Episode, Media, Person, Category
+from podgen import Podcast, Episode, Media, Person
 
 s3_client = boto3.client('s3')
 
@@ -7,29 +7,28 @@ s3_client = boto3.client('s3')
 def main(event, context):
     dynamodb = boto3.resource('dynamodb', region_name='sa-east-1')
 
-    table = dynamodb.Table('semservidor-dev')
+    table = dynamodb.Table('tablename')  # configurar o nome da tabela
 
     podcasts = table.scan()
 
-    author = Person("Evandro Pires da Silva", "evandro@evandropires.com.br")
+    author = Person("Nome completo", "seu@email.com.br")
     p = Podcast(
-        name="Sem Servidor",
-        description="Podcast dedicado a arquitetura serverless, com conteúdo de qualidade em português.",
-        website="https://semservidor.com.br",
+        name="Nome do podcast",
+        description="Descrição completa do podcast.",
+        website="https://seupodcast.com.br",
         explicit=False,
-        copyright="2020 Evandro Pires da Silva",
-        language="pr-BR",
+        copyright="2020 Nome completo",
+        language="pt-BR",
         authors=[author],
-        feed_url="https://3tz8r90j0d.execute-api.sa-east-1.amazonaws.com/dev/podcasts/rss",
-        category=Category("Music", "Music History"),
+        feed_url="https://URL_API_GATEWAY/dev/podcasts/rss",  # configurar a URL gerada para o API gateway
         owner=author,
-        image="http://d30gvsirhz3ono.cloudfront.net/logo_semservidor_teste.jpg",
-        web_master=Person(None, "evandro@evandropires.com.br")
+        image="http://seupodcast.com.br/logo.jpg",
+        web_master=Person(None, "seu@email.com.br")
     )
 
     items = podcasts['Items']
     for item in items:
-        base_url = "http://d30gvsirhz3ono.cloudfront.net/"
+        base_url = "http://URL_BASE_CLOUDFRONT/"  # configurar a URL gerada no CloudFront
         file_path = base_url + item['info']['arquivo']['nome']
         p.episodes += [
             Episode(

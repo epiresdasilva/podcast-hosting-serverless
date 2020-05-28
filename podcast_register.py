@@ -39,7 +39,7 @@ def extract_metadata(file_path, key):
 
     dynamodb = boto3.resource('dynamodb', region_name='sa-east-1')
 
-    table = dynamodb.Table('semservidor-dev')
+    table = dynamodb.Table('tablename')  # configurar o nome da tabela
     file_size = Path(file_path).stat().st_size
 
     return table.put_item(

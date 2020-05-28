@@ -1,6 +1,6 @@
-service: semservidor
-app: semservidor-app
-org: evandro
+service: yourservice #configurar o nome do seu serviço
+app: yourapp #configurar o nome do seu app
+org: yourorganization #configurar o nome da sua organização
 
 provider:
   name: aws
@@ -23,11 +23,10 @@ functions:
     handler: podcast_register.main
     events:
       - s3:
-          bucket: semservidorpodcasts
+          bucket: yourpodcastbucket #configurar o nome do seu bucket S3
           event: s3:ObjectCreated:*
           rules:
             - suffix: .mp3
-#    role: arn:aws:iam::363223992648:role/podcast_register_function_s3
   podcastRss:
     handler: podcast_rss.main
     events:

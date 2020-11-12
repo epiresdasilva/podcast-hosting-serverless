@@ -37,7 +37,7 @@ def main(event, context):
 def extract_metadata(file_path, key):
     mp3 = MP3File(file_path)
 
-    dynamodb = boto3.resource('dynamodb', region_name='sa-east-1')
+    dynamodb = boto3.resource('dynamodb', region_name='us-east-1')
 
     table = dynamodb.Table('semservidor-dev')
     file_size = Path(file_path).stat().st_size

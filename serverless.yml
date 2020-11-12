@@ -1,11 +1,9 @@
 service: semservidor
-app: semservidor-app
-org: evandro
 
 provider:
   name: aws
   runtime: python3.7
-  region: sa-east-1
+  region: us-east-1
   stage: dev
   environment:
     PODCAST_TABLE: ${self:service}-${opt:stage, self:provider.stage}
@@ -16,6 +14,7 @@ provider:
         - dynamodb:Scan
         - dynamodb:GetItem
         - dynamodb:PutItem
+        - s3:GetObject
       Resource: "*"
 
 functions:
@@ -23,11 +22,10 @@ functions:
     handler: podcast_register.main
     events:
       - s3:
-          bucket: semservidorpodcasts
+          bucket: semservidor-podcasts
           event: s3:ObjectCreated:*
           rules:
             - suffix: .mp3
-#    role: arn:aws:iam::363223992648:role/podcast_register_function_s3
   podcastRss:
     handler: podcast_rss.main
     events:
